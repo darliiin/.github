@@ -3,6 +3,11 @@ mergeable:
   # CHANGELOG.md is required in the PR, unless it's from 'darliiin'
   - when: pull_request.*
     name: 'Checking for the presence of the CHANGELOG.md file'
+    filter:
+      - do: author
+        must_exclude:
+            regex: '^darliiin$'
+            message: 'Skipping CHANGELOG.md check for darliiin PRs'
     validate:
       - do: changeset
         no_empty:
