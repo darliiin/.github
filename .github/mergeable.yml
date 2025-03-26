@@ -1,0 +1,35 @@
+version: 2
+mergeable:
+  # CHANGELOG.md is required in the PR, unless it's from 'darliiin'
+  - when: pull_request.*
+    name: 'Checking for the presence of the CHANGELOG.md file'
+    filter:
+      - do: author
+        must_exclude:
+            regex: '^darliiin$'
+            message: 'Skipping CHANGELOG.md check for darliiin PRs'
+    validate:
+      - do: changeset
+        no_empty:
+          enabled: true
+          message: 'empty'
+        must_include:
+          regex: 'CHANGELOG.md'
+          message: 'CHANGELOG.md with details must be present in every PR'
+
+  - when: pull_request.*
+    name: 'Title check'
+    filter:
+      - do: author
+        must_exclude:
+            regex: '^darliiin$'
+            message: 'Skipping CHANGELOG.md check for darliiin PRs'
+    validate:
+      - do: title
+        must_exclude:
+          regex: '\bwip\b'
+          regex_flag: 'i' # case-insensitive (it is a default, to disable use 'none')
+          message: 'Title must exclude "wip"'
+        begins_with:
+          match: ['doc:', 'feat:', 'fix:']
+          message: 'Title must begin with "doc:", "feat:", or "fix:"'
